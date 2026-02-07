@@ -1,0 +1,1 @@
+"En el proyecto Sentinel, usamos Clean Architecture. Prefiere siempre FastAPI para el backend, SQLAlchemy para el ORM y asegúrate de que todas las funciones de base de datos tengan manejo de errores (try/except) y tipos de datos (Type Hints)."

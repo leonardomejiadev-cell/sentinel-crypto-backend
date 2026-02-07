@@ -1,0 +1,72 @@
+CREATE TABLE users (
+	id SERIAL PRIMARY KEY,
+	username VARCHAR(20) UNIQUE NOT NULL,
+    name VARCHAR(50) NOT NULL,
+    lastname VARCHAR(50) NOT NULL,
+    email VARCHAR(50) UNIQUE NOT NULL,
+    register_at TIMESTAMPTZ DEFAULT CURRENT_TIMESTAMP,
+    last_connection TIMESTAMPTZ DEFAULT CURRENT_TIMESTAMP,
+    is_active BOOLEAN DEFAULT TRUE,
+
+    CONSTRAINT ck_length_username
+        CHECK (CHAR_LENGTH(username) >= 4),
+    CONSTRAINT ck_registerat_lastconnection
+        CHECK (last_connection >= register_at)
+);
+
+
+CREATE TABLE coins (
+    id SERIAL PRIMARY KEY,
+    external_id TEXT UNIQUE NOT NULL,
+    name VARCHAR(50) UNIQUE NOT NULL,
+    symbol VARCHAR(10) UNIQUE NOT NULL,
+    description VARCHAR(200),
+
+    CONSTRAINT ck_length_symbol
+        CHECK (CHAR_LENGTH(symbol) >= 3)
+);
+
+
+CREATE TABLE balances (
+    id SERIAL PRIMARY KEY,
+    user_id INTEGER NOT NULL,
+    coin_id INTEGER NOT NULL,
+    amount NUMERIC(32, 18) DEFAULT 0 NOT NULL,
+
+    CONSTRAINT fk_balances_user
+        FOREIGN KEY (user_id) REFERENCES users(id)
+        ON DELETE RESTRICT,
+
+    CONSTRAINT fk_balances_coin
+        FOREIGN KEY (coin_id) REFERENCES coins(id)
+        ON DELETE RESTRICT,
+
+    CONSTRAINT uq_user_coin
+        UNIQUE(user_id, coin_id)
+);
+
+
+CREATE TYPE tx_type AS ENUM ('deposit', 'withdrawal', 'trade', 'fee');
+
+
+CREATE TABLE transactions (
+    id SERIAL PRIMARY KEY,
+    user_id INTEGER NOT NULL,
+    coin_id INTEGER NOT NULL,
+    type tx_type NOT NULL,
+    amount NUMERIC(32, 18) NOT NULL,
+    fee NUMERIC(32, 18) DEFAULT 0 NOT NULL,
+    trade_group_id UUID,
+    created_at TIMESTAMPTZ DEFAULT CURRENT_TIMESTAMP,
+
+    CONSTRAINT fk_transactions_users
+        FOREIGN KEY (user_id) REFERENCES users(id)
+        ON DELETE RESTRICT,
+
+    CONSTRAINT fk_transactions_coins
+        FOREIGN KEY (coin_id) REFERENCES coins(id)
+        ON DELETE RESTRICT,
+
+    CONSTRAINT ck_amount_zero
+        CHECK (amount <> 0)
+);
