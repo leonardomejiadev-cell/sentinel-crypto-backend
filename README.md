@@ -30,4 +30,4 @@ The project implements **Clean Architecture** to separate business rules from te
 > **Note:** This repository is currently in **active development**. The directory structure and core features are being implemented following an 8-month roadmap for Backend & AI specialization.
 
 ---
-Developed by [Leonardo Mejia](https://github.com/leonardomejiadev-cell) - *Architecture Mentor & Backend Developer*
+Developed by [Leonardo Mejia](https://github.com/leonardomejiadev-cell) - *Backend Developer | Clean Architecture Enthusiast*
