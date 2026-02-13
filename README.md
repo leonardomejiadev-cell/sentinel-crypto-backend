@@ -6,7 +6,7 @@
 Sentinel is a backend engine specialized in market sentiment analysis and strategic trading execution. It is designed under Modular Architecture principles to ensure scalability, security, and clean separation of concerns.
 
 ## 🏗️ Project Structure
-
+```
 sentinel/
 ├── app/                 # Main source code
 │   ├── api/             # Presentation layer (Endpoints & Routers)
@@ -16,10 +16,10 @@ sentinel/
 ├── main.py              # Root entry point (Wrapper)
 ├── .env                 # Local configuration (Git ignored)
 └── docker-compose.yml   # PostgreSQL Infrastructure
-
+```
 
 ## 🚀 Quick Start
-
+```
 **Prerequisites:** Docker, Python 3.13 and venv.
 
 **Configuration:** Create a .env file in the root:
@@ -39,7 +39,7 @@ Alternative option:
 python main.py
 
 Access the interactive documentation at: http://localhost:8000/docs
-
+```
 ## ✅ Development Workflow
 
 **Imports:** Always use absolute paths from root (e.g., from app.infrastructure.database import db).
