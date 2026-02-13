@@ -108,22 +108,3 @@ SELECT users.username, coins.symbol, balances.amount
 FROM balances
 JOIN users ON users.id = balances.user_id
 JOIN coins ON coins.id = balances.coin_id;
-CREATE OR REPLACE FUNCTION fn_update_balance_after_tx()
-RETURNS TRIGGER AS $$
-BEGIN
-    -- 1. Intentamos insertar una fila nueva en balances
-    INSERT INTO balances (user_id, coin_id, amount)
-    VALUES (NEW.user_id, NEW.coin_id, NEW.amount)
-    -- 2. Si ya existe la combinación (user_id, coin_id), saltamos al UPDATE
-    ON CONFLICT (user_id, coin_id)
-    DO UPDATE SET 
-        amount = balances.amount + EXCLUDED.amount;
-
-    RETURN NEW;
-END;
-$$ LANGUAGE plpgsql;
-
-CREATE TRIGGER tr_sync_balances
-AFTER INSERT ON transactions
-FOR EACH ROW
-EXECUTE FUNCTION fn_update_balance_after_tx();
