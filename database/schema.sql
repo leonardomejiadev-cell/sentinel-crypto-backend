@@ -1,3 +1,4 @@
+-- tabla de usuarios, con validaciones de longitud y unicidad
 CREATE TABLE users (
 	id SERIAL PRIMARY KEY,
 	username VARCHAR(20) UNIQUE NOT NULL,
@@ -14,19 +15,19 @@ CREATE TABLE users (
         CHECK (last_connection >= register_at)
 );
 
-
+-- tabla de monedas, con validaciones de longitud y unicidad
 CREATE TABLE coins (
     id SERIAL PRIMARY KEY,
     external_id TEXT UNIQUE NOT NULL,
     name VARCHAR(50) UNIQUE NOT NULL,
     symbol VARCHAR(10) UNIQUE NOT NULL,
-    description VARCHAR(200),
+    description TEXT NOT NULL,
 
     CONSTRAINT ck_length_symbol
         CHECK (CHAR_LENGTH(symbol) >= 3)
 );
 
-
+-- tabla de balances, con restricciones de clave foránea y unicidad para evitar duplicados
 CREATE TABLE balances (
     id SERIAL PRIMARY KEY,
     user_id INTEGER NOT NULL,
@@ -45,10 +46,10 @@ CREATE TABLE balances (
         UNIQUE(user_id, coin_id)
 );
 
-
+-- tipo enumerado para las transacciones, con valores predefinidos
 CREATE TYPE tx_type AS ENUM ('deposit', 'withdrawal', 'trade', 'fee');
 
-
+-- tabla de transacciones, con restricciones de clave foránea, validaciones de cantidad y un campo para agrupar transacciones relacionadas
 CREATE TABLE transactions (
     id SERIAL PRIMARY KEY,
     user_id INTEGER NOT NULL,
@@ -70,3 +71,39 @@ CREATE TABLE transactions (
     CONSTRAINT ck_amount_zero
         CHECK (amount <> 0)
 );
+
+-- trigger para actualizar balances despues de cada transaccion
+CREATE OR REPLACE FUNCTION fn_update_balance_after_tx()
+RETURNS TRIGGER AS $$
+BEGIN
+    -- 1. Intentamos insertar una fila nueva en balances
+    INSERT INTO balances (user_id, coin_id, amount)
+    VALUES (NEW.user_id, NEW.coin_id, NEW.amount)
+    -- 2. Si ya existe la combinación (user_id, coin_id), saltamos al UPDATE
+    ON CONFLICT (user_id, coin_id)
+    DO UPDATE SET 
+        amount = balances.amount + EXCLUDED.amount;
+
+    RETURN NEW;
+END;
+$$ LANGUAGE plpgsql;
+
+-- trigger para ejecutar la función después de cada inserción en transacciones
+CREATE TRIGGER tr_sync_balances
+AFTER INSERT ON transactions
+FOR EACH ROW
+EXECUTE FUNCTION fn_update_balance_after_tx();
+
+-- consulta de ejemplo para verificar que los balances se actualizan correctamente después de una transacción
+SELECT users.username, coins.symbol, balances.amount
+FROM balances
+JOIN users ON users.id = balances.user_id
+JOIN coins ON coins.id = balances.coin_id
+WHERE balances.user_id = 2 AND balances.coin_id = 1;
+
+-- view para mostrar el portafolio completo de cada usuario, con su nombre de usuario, símbolo de la moneda y cantidad
+CREATE OR REPLACE VIEW view_user_portfolio AS
+SELECT users.username, coins.symbol, balances.amount
+FROM balances
+JOIN users ON users.id = balances.user_id
+JOIN coins ON coins.id = balances.coin_id;
