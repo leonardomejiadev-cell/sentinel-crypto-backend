@@ -19,27 +19,27 @@ sentinel/
 ```
 
 ## 🚀 Quick Start
-```
+
 **Prerequisites:** Docker, Python 3.13 and venv.
 
 **Configuration:** Create a .env file in the root:
-
+```
 DB_HOST=localhost
 DB_NAME=sentinel_db
 DB_USER=postgres
 DB_PASSWORD=your_password
 DB_PORT=5432
-
+```
 **Execution:** To start the development server:
-
+```
 Recommended option:
 uvicorn app.main:app --reload
 
 Alternative option:
 python main.py
-
-Access the interactive documentation at: http://localhost:8000/docs
 ```
+Access the interactive documentation at: http://localhost:8000/docs
+
 ## ✅ Development Workflow
 
 **Imports:** Always use absolute paths from root (e.g., from app.infrastructure.database import db).
