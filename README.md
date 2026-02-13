@@ -2,16 +2,11 @@
 ![Python](https://img.shields.io/badge/Python-3.13-blue)
 ![Architecture](https://img.shields.io/badge/Architecture-Clean%20Architecture-green)
 
-# Sentinel Trading Backend 🚀 
-
-**Sentinel** is a backend engine specialized in market sentiment analysis and strategic trading execution. It is designed under Modular Architecture principles to ensure scalability, security, and clean separation of concerns.
-
-
 # Sentinel Trading Backend 🚀
 Sentinel is a backend engine specialized in market sentiment analysis and strategic trading execution. It is designed under Modular Architecture principles to ensure scalability, security, and clean separation of concerns.
 
 ## 🏗️ Project Structure
-```text
+
 sentinel/
 ├── app/                 # Main source code
 │   ├── api/             # Presentation layer (Endpoints & Routers)
@@ -21,39 +16,40 @@ sentinel/
 ├── main.py              # Root entry point (Wrapper)
 ├── .env                 # Local configuration (Git ignored)
 └── docker-compose.yml   # PostgreSQL Infrastructure
-```
+
 
 ## 🚀 Quick Start
-Prerequisites: Docker, Python 3.13 and venv.
 
-Configuration: Create a .env file in the root:
-```env
+**Prerequisites:** Docker, Python 3.13 and venv.
+
+**Configuration:** Create a .env file in the root:
+
 DB_HOST=localhost
 DB_NAME=sentinel_db
 DB_USER=postgres
 DB_PASSWORD=your_password
 DB_PORT=5432
-```
 
-Execution: To start the development server:
-```bash
+**Execution:** To start the development server:
+
 Recommended option:
 uvicorn app.main:app --reload
 
 Alternative option:
 python main.py
-```
 
 Access the interactive documentation at: http://localhost:8000/docs
 
 ## ✅ Development Workflow
-Imports: Always use absolute paths from root (e.g., from app.infrastructure.database import db).
 
-Security: SQL parameters are passed via positional arguments (%s) to prevent SQL Injection.
+**Imports:** Always use absolute paths from root (e.g., from app.infrastructure.database import db).
 
-Modularity: Every new resource must have its own router inside app/api/endpoints/.
+**Security:** SQL parameters are passed via positional arguments (%s) to prevent SQL Injection.
 
-🛠️ Roadmap
+**Modularity:** Every new resource must have its own router inside app/api/endpoints/.
+
+## 🛠️ Roadmap
+
 [x] Base architecture & Database Dockerization.
 
 [x] Secure connection via DatabaseManager class (Singleton).
@@ -66,7 +62,7 @@ Modularity: Every new resource must have its own router inside app/api/endpoints
 
 [ ] AI-driven Sentiment Analysis Bot integration.
 
-⚠️ Project Status
+## ⚠️ Project Status
 Note: This repository is currently in active development. The directory structure and core features are being implemented following an 8-month roadmap for Backend & AI specialization.
 
-Developed by Leonardo Mejia - Backend Developer | Clean Architecture Enthusiast
+**Developed by Leonardo Mejia - Backend Developer | Clean Architecture Enthusiast**
