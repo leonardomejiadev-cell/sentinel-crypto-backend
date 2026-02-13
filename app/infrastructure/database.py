@@ -15,12 +15,6 @@ class DatabaseManager:
         self.port = os.getenv("DB_PORT")
 
     def get_connection(self):
-        """
-        Obtiene una conexión a la base de datos.
-        
-        Returns:
-            Connection: Conexión a PostgreSQL o None si falla
-        """
         try:
             conn = psycopg2.connect(
                 host=self.host,
@@ -35,5 +29,4 @@ class DatabaseManager:
             return None
 
 
-# Instancia global del gestor de base de datos
 db = DatabaseManager()

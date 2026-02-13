@@ -7,3 +7,4 @@ postgres_data/
 __pycache__/
 *.py[cod]
 .env
+sentinel_editor.session.sql

@@ -12,15 +12,6 @@ router = APIRouter(
 
 @router.get("/portfolio/{username}")
 def get_portfolio(username: str):
-    """
-    Obtiene el portafolio de un usuario.
-    
-    Args:
-        username: Nombre de usuario
-        
-    Returns:
-        dict: Portafolio del usuario con sus monedas y cantidades
-    """
     conn = db.get_connection()
     if not conn:
         raise HTTPException(status_code=500, detail="Database connection failed")
